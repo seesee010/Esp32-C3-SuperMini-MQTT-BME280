@@ -1,5 +1,9 @@
 Copyright (C) 2026 seesee010
 
+This software includes components from:
+- BME280 (C) Tyler Glenn (GPL 3.0)  
+- AViShaMQTT (C) Ajang (GPL 3.0)
+
                     GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
 
