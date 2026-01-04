@@ -44,6 +44,15 @@
 
 */
 
+// secret config
+#if __has_include("config.h")
+  #include "config.h"
+
+#else
+  #include "config.example.h"
+
+#endif
+
 #define baudrate 115200
 
 #define pin_sda 8
@@ -56,10 +65,6 @@
 // AViShaMQTT.h by Ajang
 // gpl 3.0 license
 #include <AViShaMQTT.h>
-
-const char *ssid = "my_wifi";
-const char *password = "password";
-const char *mqtt_server = "broker.emqx.io";
 
 const char *topicTemp = "homeassistant/outside/0/temp";
 const char *topicPres = "homeassistant/outside/0/pres";
