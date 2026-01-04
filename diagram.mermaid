@@ -1,0 +1,12 @@
+flowchart TD
+    ESP[ESP32-C3 SuperMini]
+    BME[BME280 Sensor]
+    HA[Home Assistant]
+    Broker[MQTT Broker]
+    
+    ESP -->|MQTT + WiFi| Broker
+    Broker --> |MQTT Subscribe| HA
+    
+    BME -.->|Temp| ESP
+    BME -.->|Humidity| ESP
+    BME -.->|Pressure| ESP
