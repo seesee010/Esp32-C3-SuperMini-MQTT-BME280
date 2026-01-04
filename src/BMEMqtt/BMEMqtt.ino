@@ -49,9 +49,11 @@
 // secret config
 #if __has_include("config.h")
   #include "config.h"
+  const bool is_using_config = true;
 
 #else
   #include "config.example.h"
+  const bool is_using_config = false;
 
 #endif
 
@@ -74,7 +76,7 @@ const char *topicTemp = "homeassistant/outside/0/temp";
 const char *topicPres = "homeassistant/outside/0/pres";
 const char *topicHum = "homeassistant/outside/0/hum";
 
-AViShaMQTT mqtt(ssid, password, mqtt_server);
+AViShaMQTT mqtt(ssid, password, mqtt_server, 1883, mqtt_user, mqtt_pass);
 
 BME280I2C bme;
 
@@ -102,24 +104,49 @@ void sendData(float temp, float pres, float hum) {
 }
 
 void setup() {
-
-  // bme280
-  Wire.begin(pin_sda, pin_scl);
-  bme.begin();
-
-  // inizialise Serial Interface
   Serial.begin(baudrate);
+  delay(1000);
+
+  Serial.println("\n=== START ===\n");
+
+  Wire.begin(pin_sda, pin_scl);
+  if (!bme.begin()) {
+    Serial.println("BME280 is not connected!");
+    while(1) delay(1000);
+  }
+  Serial.println("BME280 is oK!");
+
+  Serial.println("Config.h in use?");
+  Serial.print(is_using_config);
 
   mqtt.begin();
 }
 
 void loop() {
-
   mqtt.loop();
+  
+  // Connection Check
+  if (!mqtt.isConnected()) {
+    Serial.println("MQTT is DISCONNECTED!");
+    delay(1000);
+    return;
+  }
+  
+  Serial.println("--- read sensor ---");
+  
+  BME280::TempUnit tempUnit(BME280::TempUnit_Celsius);
+  BME280::PresUnit presUnit(BME280::PresUnit_Pa);
+  bme.read(pres, temp, hum, tempUnit, presUnit);
+  
+  sendData(temp, pres / 100000.0, hum);
 
-  // main loop
-  getData(&Serial);
-  sendData(temp, pres, hum);
+  Serial.print("T:"); Serial.print(temp);
+  Serial.print(" H:"); Serial.print(hum);
+  Serial.print(" P:"); Serial.println(pres / 100000.0);
+  
+  Serial.println("Publishing...");
 
+  
+  Serial.println("Done!\n");
   delay(3500);
 }
