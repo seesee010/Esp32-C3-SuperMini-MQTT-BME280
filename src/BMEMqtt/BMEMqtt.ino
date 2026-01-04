@@ -23,6 +23,8 @@
   Dependencies:
   - BME280I2C.h by Tyler Glenn (GPL-3.0)
   - AViShaMQTT.h by Ajang (GPL-3.0)
+  - MQTT.h by Joel Gaehwiler (MIT License)
+  - Wire.h (Arduino Core)
 
 ==========
 
@@ -65,6 +67,8 @@
 // AViShaMQTT.h by Ajang
 // gpl 3.0 license
 #include <AViShaMQTT.h>
+
+#include <Wire.h>
 
 const char *topicTemp = "homeassistant/outside/0/temp";
 const char *topicPres = "homeassistant/outside/0/pres";
